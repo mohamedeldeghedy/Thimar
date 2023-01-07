@@ -1,0 +1,11 @@
+String login='login';
+String register='client_register';
+String? token = '';
+String getCategories='categories/1';
+String verify='verify';
+String forgetPass='forget_password';
+String checkCode='check_code';
+String resetPass='reset_password';
+String resendCode='resend_code';
+String userData='client/profile';
+String editProfile='client/profile';
