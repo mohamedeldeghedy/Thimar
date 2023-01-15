@@ -1,8 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:thimar/core/server_gate.dart';
 
 class AddNewAddresseScreen extends StatefulWidget {
   const AddNewAddresseScreen({Key? key}) : super(key: key);
@@ -50,33 +51,38 @@ class _AddNewAddresseScreenState extends State<AddNewAddresseScreen> {
     }
 
     _locationData = await location.getLocation();
-    LatLng latLng =
-        LatLng(_locationData?.latitude ?? 0, _locationData?.longitude ?? 0);
-    _goToLatlng(latLng);
+    LatLng latLng = LatLng(_locationData?.latitude ?? 0, _locationData?.longitude ?? 0);
+    goToLatlng(latLng);
   }
 
   LatLng? modifyedLatlng;
+  final serverGate=ServerGate();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Container(
+
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: GestureDetector(
         onTap: () {
           // TODO: SAVE USER LOCATION FROM THIS BTN
           if (modifyedLatlng == null) {
+
             // TODO : SHOW error toast to set user location
           } else {
+            goToLatlng(modifyedLatlng!);
             Navigator.pop(context, modifyedLatlng);
           }
         },
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              color: Colors.green, borderRadius: BorderRadius.circular(20)),
+              color: Colors.green, borderRadius: BorderRadius.circular(20.r)),
           height: 50,
           width: double.infinity,
           margin:
-              const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 20),
+               EdgeInsets.symmetric(horizontal: 20.r).copyWith(bottom: 20),
           child: const Text(
             'SAVE',
             style: TextStyle(color: Colors.white),
@@ -88,7 +94,7 @@ class _AddNewAddresseScreenState extends State<AddNewAddresseScreen> {
         markers: myMarker,
         buildingsEnabled: true,
         onTap: (latlng) {
-          // _goToLatlng(latlng);
+           goToLatlng(latlng);
           setState(() {
             myMarker
                 .add(Marker(markerId: const MarkerId('1'), position: latlng));
@@ -101,9 +107,16 @@ class _AddNewAddresseScreenState extends State<AddNewAddresseScreen> {
       ),
     );
   }
-
-  Future<void> _goToLatlng(LatLng latlng) async {
-    modifyedLatlng = latlng;
+  
+  Future<void> goToLatlng(LatLng latlng) async {
+    final resp=await serverGate.sendToServer(url: 'current_location',body: {
+      'lat':latlng.latitude,
+      'lng':latlng.longitude
+    });
+    if(resp.success){
+       modifyedLatlng = latlng;
+      print("z=zz=z=z-z=-z=z-z=-z=z-z=-z=-z=-zz=-=-=z-c=-c=c-c=c-c=c-cc=c-c=${latlng.latitude.toString()}");
+    }
     myMarker.add(Marker(markerId: const MarkerId('1'), position: latlng));
     setState(() {});
     final GoogleMapController controller = await _controller.future;

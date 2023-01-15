@@ -6,14 +6,14 @@ import 'package:kiwi/kiwi.dart';
 import 'package:thimar/core/helper_methods.dart';
 import 'package:thimar/generated/locale_keys.g.dart';
 import 'package:thimar/screens/home/pages/feeds/bloc/bloc.dart';
-import 'package:thimar/screens/product_details/view.dart';
-import 'package:thimar/shared/icons.dart';
+import 'package:thimar/search/view.dart';
 import 'package:thimar/shared/input.dart';
 import 'package:thimar/shared/my_app_bar.dart';
 import 'package:thimar/shared/my_button.dart';
 import 'package:thimar/shared/res/colors.dart';
 import '../gen/assets.gen.dart';
 import '../screens/home/pages/feeds/components/item_category_product.dart';
+import '../search/bloc/bloc.dart';
 
 class CategoryProductsScreen extends StatefulWidget {
   final int id;
@@ -31,13 +31,14 @@ class CategoryProductsScreen extends StatefulWidget {
 
 class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
   final bloc = KiwiContainer().resolve<FeedsBloc>();
+  final searchBloc=KiwiContainer().resolve<SearchBloc>();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     bloc.add(GetCategoryProductsEvent(id: widget.id));
-  }
 
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,21 +76,44 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
                                     fontSize: 17.sp,
                                     fontWeight: FontWeight.bold),
                               ),
-                              Slider(
-                                activeColor: Colors.black,
-                                inactiveColor: Colors.black,
-                                value: bloc.slider,
-                                onChanged: (value) {
-                                  setState(() {
-                                    bloc.slider = value;
-                                    print(value.toString());
-                                  });
+                              Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(LocaleKeys.price.tr(),
+                                      style: TextStyle(
+                                          fontSize:15.sp ,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black)),
+                                ],
+                              ),
+                              BlocBuilder(
+                                bloc: bloc,
+                                builder: (context, state) {
+                                  return  RangeSlider(
+                                    values: bloc.currentRangeValues,
+                                    max: 2000,
+                                    divisions: 200,
+                                    labels: RangeLabels(
+                                      bloc.currentRangeValues.start.round().toString(),
+                                      bloc.currentRangeValues.end.round().toString(),
+                                    ),
+                                    onChanged: (RangeValues values) {
+                                      bloc.currentRangeValues = values;
+                                      bloc.add(PostPriceEvent(values: bloc.currentRangeValues, word: searchBloc.searchController.text));
+                                    },
+                                  );
                                 },
-                                min: 0,
-                                max: 300,
+
                               ),
                               const Spacer(),
-                              MyButton(buttonName: 'تطبيق', onPressed: () {}),
+                              BlocBuilder(
+                                bloc: bloc,
+                                builder: (context, state) {
+                                  return  MyButton(buttonName: 'تطبيق', onPressed: () {
+                                   navigateTo(context, page: SearchScreen(word: searchBloc.searchController.text,values: bloc.currentRangeValues),withHistory: true);
+                                  });
+                                },
+
+                              ),
                             ]),
                       ),
                     );
@@ -99,7 +123,10 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
                     width: 20.w,
                     color: Colors.black,
                   )),
-              onTap: () {},
+              controller: searchBloc.searchController,
+              onSubmit: (v){
+                navigateTo(context, page: SearchScreen(word: searchBloc.searchController.text));
+              },
             ),
             BlocBuilder(
                 bloc: bloc,

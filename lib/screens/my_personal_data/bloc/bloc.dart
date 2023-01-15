@@ -55,8 +55,8 @@ ProfileModel? profile;
     emit(GetProfileLoadingState());
     final resp=await serverGate.sendToServer(url: editProfile);
     if(resp.success){
-      final model=ProfileModel.fromJson(resp.response!.data);
-      profile=model;
+       profile=ProfileModel.fromJson(resp.response!.data);
+
       emit(GetProfileSuccessState(msg: resp.msg));
     }
     else{

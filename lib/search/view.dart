@@ -10,7 +10,9 @@ import 'components/item_search.dart';
 
 class SearchScreen extends StatefulWidget {
   final String word;
-  const SearchScreen({Key? key, required this.word,}) : super(key: key);
+  final RangeValues? values;
+
+  const SearchScreen({Key? key, required this.word,this.values,}) : super(key: key);
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();

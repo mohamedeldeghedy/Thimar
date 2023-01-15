@@ -15,3 +15,7 @@ class RegisterFailedState extends RegisterStates{
   RegisterFailedState({required this.msg});
 }
 
+class GetCitySuccessState extends RegisterStates{}
+class GetCityFailedState extends RegisterStates{}
+
+

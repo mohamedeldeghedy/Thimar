@@ -49,6 +49,10 @@ class GetSliderLoadingState extends FeedsStates{}
 class GetSliderSuccessState extends FeedsStates{}
 class GetSliderFailedState extends FeedsStates{}
 
+class PostPriceLoadingState extends FeedsStates{}
+class PostPriceSuccessState extends FeedsStates{}
+class PostPriceFailedState extends FeedsStates{}
+
 
 
 

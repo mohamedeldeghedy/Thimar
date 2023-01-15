@@ -16,6 +16,8 @@ class MyAccountBloc extends Bloc<MyAccountEvents,MyAccountStates> {
     on<AboutEvent>(aboutApp);
   }
 
+
+
   Data? data;
   City? city;
   final serverGate =ServerGate();

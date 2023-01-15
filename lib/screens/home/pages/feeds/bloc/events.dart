@@ -10,6 +10,12 @@ class GetCategoryProductsEvent extends FeedsEvents{
 }
 class GetFavouritesEvent extends FeedsEvents{}
 class GetSliderEvent extends FeedsEvents{}
+class PostPriceEvent extends FeedsEvents{
+  RangeValues values;
+  String word;
+  PostPriceEvent({required this.values,required this.word});
+}
+
 
 
 

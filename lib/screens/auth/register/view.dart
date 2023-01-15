@@ -13,16 +13,19 @@ import '../../../shared/have_account_or_not.dart';
 import '../../../shared/head_lines.dart';
 import '../../../shared/input.dart';
 import '../../../shared/my_button.dart';
+import 'components/item_city.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  String? cityId;
+   RegisterScreen({Key? key}) : super(key: key);
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final bloc = KiwiContainer().resolve<RegisterBloc>();
+  final bloc = KiwiContainer().resolve<RegisterBloc>()..add(GetCityEvent());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,23 +60,61 @@ class _RegisterScreenState extends State<RegisterScreen> {
               controller: bloc.passwordController,
               prefix: const Icon(Icons.lock_open),
             ),
-            // Input(
-            //   validate: (String? value){
-            //     if(value!.isEmpty) {
-            //       return 'city must not be empty';
-            //     }
-            //     return null;
-            //     },
-            //   prefix: Icons.flag,
-            //   label: LocaleKeys.city.tr(),
-            //   controller: bloc.cityController,
-            //   type: TextInputType.text,
-            //   onSubmit: (value)
-            //   {
-            //     bloc.cityController.text=value;
-            //     print(bloc.cityController.text);
-            //   },
-            // ),
+            Input(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(40.r),
+                          topLeft: Radius.circular(40.r))),
+                  builder: (context) => Container(
+                    width: 376.w,
+                    height: 300.h,
+                    padding: EdgeInsetsDirectional.only(top: 10.h, start: 21.w),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30.r),
+                            topRight: Radius.circular(50.r))),
+                    child: ListView.separated(
+                        itemBuilder: (context, index) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap:(){
+                              bloc.cityController.text=bloc.cityModel!.data[index].name;
+                              widget.cityId=bloc.cityModel!.data[index].id;
+                              Navigator.pop(context);
+                            },
+                            child: ItemCity(
+                              cityData: bloc.cityModel!.data[index],
+                            ),
+
+                          ),
+                        ],
+                      );
+                    },
+                        separatorBuilder: (context, index) => SizedBox(height: 30.h),
+                        itemCount: bloc.cityModel!.data.length),
+                  ),
+                );
+              },
+              validate: (String? value) {
+                if (value!.isEmpty) {
+                  return 'city must not be empty';
+                }
+                return null;
+              },
+              prefix: const Icon(Icons.flag),
+              label: LocaleKeys.city.tr(),
+              controller: bloc.cityController,
+              type: TextInputType.text,
+              onSubmit: (value) {
+                bloc.cityController.text = value;
+                print(bloc.cityController.text);
+              },
+            ),
             Input(
               validate: validatePassword,
               prefix: const Icon(Icons.lock_open_outlined),
@@ -85,7 +126,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 if (state is RegisterSuccessState) {
                   showToast(msg: state.msg, state: ToastStates.success);
                   navigateTo(context,
-                      page: AccountActivation(
+                      page: AccountActivationScreen(
                         phone: bloc.phoneController.text,
                       ),
                       withHistory: false);
@@ -101,7 +142,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     isLoading: state is RegisterLoadingState,
                     onPressed: () {
                       if (bloc.formKey.currentState!.validate()) {
-                        bloc.add(PostRegisterEvent());
+                        bloc.add(PostRegisterEvent(id:widget.cityId! ));
                       }
                     });
               },

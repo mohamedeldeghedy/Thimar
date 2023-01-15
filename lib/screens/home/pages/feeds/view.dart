@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:thimar/core/helper_methods.dart';
 import 'package:thimar/screens/my_cart/view.dart';
-import 'package:thimar/shared/icons.dart';
 import '../../../../category_products/view.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../generated/locale_keys.g.dart';

@@ -1,13 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:thimar/screens/home/pages/my_notification/bloc/bloc.dart';
 import 'package:thimar/shared/my_app_bar.dart';
-
 import '../../../../generated/locale_keys.g.dart';
-import 'components/item_notification.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -32,7 +29,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             BlocBuilder(
               bloc: bloc,
               builder: (context, state) {
-                if(state is NotificationLoadingState){
+                if(bloc.notificationModel ==null){
                   return const Center(child: CircularProgressIndicator());
                 }
                 if(state is NotificationSuccessState ){
@@ -48,7 +45,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                  //  );
 
                 else{
-                  return Center(child: Text(bloc.notificationModel!.message));
+                  return Center(child: SizedBox(child: Center(child: Text(bloc.notificationModel!.message))));
                 }
 
               },

@@ -40,14 +40,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer(
+    return BlocBuilder(
       bloc: bloc,
-      listener:(context, state) =>{} ,
       builder:(context, state) {
         if( state is GetProductDetailsFailedState){
           return const Center(child: Text('Failed'));
         }
-        if(bloc.product ==null ||state is GetProductDetailsLoadingState){
+        if(bloc.product==null){
           return const Center(child: CircularProgressIndicator(backgroundColor: Colors.white,));
         }
         else{
@@ -85,7 +84,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         BlocBuilder(
         bloc: bloc,
         builder: (context, state) {
-        if (bloc.product?.images == null ||
+        if (
         state is GetProductDetailsLoadingState) {
         return const CircularProgressIndicator();
         }
@@ -93,10 +92,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         return SizedBox(
         height: 164.0.h,
         width: double.infinity,
-        child: Swiper(
+        child: bloc.product!.images.isEmpty?Image(
+          image:
+          NetworkImage(bloc.product!.mainImage),
+          width: double.infinity,
+          fit: BoxFit.cover,
+        ):Swiper(
         itemBuilder: (context, index) => Image(
         image:
-        NetworkImage(bloc.product!.images[index].name),
+        NetworkImage(bloc.product!.images[index].url),
         width: double.infinity,
         fit: BoxFit.cover,
         ),

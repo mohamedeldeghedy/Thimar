@@ -24,7 +24,7 @@ class VerificationBloc extends Bloc<VerificationEvents,VerificationStates>{
     final resp= await serverGate.sendToServer(url: verify,
         body: {
           'code':textEditingController.text,
-          "phone":"",
+          "phone":event.phone,
           'device_token':'vv',
           'type':'ios'
         });

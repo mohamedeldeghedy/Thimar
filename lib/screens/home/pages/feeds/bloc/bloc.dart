@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thimar/screens/home/pages/feeds/bloc/slider_model.dart';
 import '../../../../../core/server_gate.dart';
@@ -17,6 +18,7 @@ class FeedsBloc extends Bloc<FeedsEvents, FeedsStates> {
     on<GetFavouritesEvent>(getFavourites);
     on<GetSliderEvent>(getSlider);
     on<GetCategoryProductsEvent>(getCategoryProducts);
+    on<PostPriceEvent>(postPrice);
 
   }
 
@@ -95,5 +97,26 @@ class FeedsBloc extends Bloc<FeedsEvents, FeedsStates> {
     else{
       emit(GetSliderFailedState());
     }
+  }
+
+  RangeValues currentRangeValues = const RangeValues(5, 80);
+
+
+  Future<void> postPrice(PostPriceEvent event, Emitter<FeedsStates> emit) async {
+    emit(PostPriceLoadingState());
+
+    final resp=await serverGate.sendToServer(url: 'search/?keyword=${event.word}&filter=asc&min_price=${currentRangeValues.start}&max_price=${currentRangeValues.end}',
+    body: {
+      'keyword':event.word
+    });
+    if(resp.success){
+      final model = CategoryProductsModel.fromJson(resp.response!.data);
+      categoryProducts = model;
+      emit(PostPriceSuccessState());
+    }
+    else{
+      emit(PostPriceFailedState());
+    }
+
   }
 }

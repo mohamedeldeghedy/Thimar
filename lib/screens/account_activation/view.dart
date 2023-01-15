@@ -17,15 +17,15 @@ import '../../shared/head_lines.dart';
 import '../../shared/my_button.dart';
 import '../auth/login/view.dart';
 
-class AccountActivation extends StatefulWidget {
+class AccountActivationScreen extends StatefulWidget {
   final String phone;
-  const AccountActivation({Key? key, required this.phone}) : super(key: key);
+  const AccountActivationScreen({Key? key, required this.phone}) : super(key: key);
 
   @override
-  State<AccountActivation> createState() => _AccountActivationState();
+  State<AccountActivationScreen> createState() => _AccountActivationState();
 }
 
-class _AccountActivationState extends State<AccountActivation> {
+class _AccountActivationState extends State<AccountActivationScreen> {
   final bloc = KiwiContainer().resolve<VerificationBloc>();
   @override
   Widget build(BuildContext context) {

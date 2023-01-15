@@ -55,7 +55,7 @@ class HaveAccounts extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     navigateTo(context,
-                        page: const RegisterScreen(), withHistory: false);
+                        page:  RegisterScreen(), withHistory: false);
                   },
                   child: Text(
                     LocaleKeys.registerNow.tr(),

@@ -16,12 +16,12 @@ class ProductData {
   late final String title;
   late final String description;
   late final String code;
-  late final int priceBeforeDiscount;
-  late final int price;
+  late final num priceBeforeDiscount;
+  late final num price;
   late final double discount;
   late final int amount;
   late final int isActive;
-  late final bool isFavorite;
+  bool isFavorite=false;
   late final Unit unit;
   late  List<Carousal> images=[];
   late final String mainImage;

@@ -91,7 +91,6 @@ final bloc=KiwiContainer().resolve<ConfirmForgetPassCodeBloc>();
                 }
                 if(state is VerifyForgetPasswordFailedState){
                   showToast(msg: state.msg, state: ToastStates.error);
-
                 }
               },
               bloc:bloc ,

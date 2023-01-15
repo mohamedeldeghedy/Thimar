@@ -23,7 +23,7 @@ class NewPasswordBloc extends Bloc<NewPasswordEvents,NewPasswordStates>{
         'code':event.code,
         'password':passController.text,
           });
-      if(resp.success) {
+      if(resp.success){
         emit(NewPasswordSuccessState(msg: resp.msg));
       }
       else{

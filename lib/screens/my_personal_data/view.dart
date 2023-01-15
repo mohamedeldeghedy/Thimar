@@ -38,13 +38,14 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
       body: BlocBuilder(
         bloc: bloc,
         builder: (context, state) {
-          if (state is GetProfileLoadingState) {
+          if (bloc.profile ==null) {
             return const CircularProgressIndicator();
           }
           if (state is GetProfileFailedState) {
             return Center(child: Text(state.msg));
           }
-          return SingleChildScrollView(
+         else {
+            return SingleChildScrollView(
             child: Form(
               key: bloc.formKey,
               child: Column(
@@ -186,6 +187,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
               ),
             ),
           );
+          }
         },
       ),
     );
